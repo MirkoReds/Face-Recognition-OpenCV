@@ -8,7 +8,10 @@ You should see a variable called src - this is what you can use within OpenCV to
 
 
 DOCUMENTAZIONE OPEN CV http://docs.opencv.org/3.2.0/index.html
+
 TUTORIAL OPEN CV http://docs.opencv.org/3.2.0/d9/df8/tutorial_root.html
+
+VIDEO CAPUTRE OPEN CV http://docs.opencv.org/3.2.0/d8/dfe/classcv_1_1VideoCapture.html
 
 
 
