@@ -11,7 +11,9 @@ DOCUMENTAZIONE OPEN CV http://docs.opencv.org/3.2.0/index.html
 
 TUTORIAL OPEN CV http://docs.opencv.org/3.2.0/d9/df8/tutorial_root.html
 
-VIDEO CAPUTRE OPEN CV http://docs.opencv.org/3.2.0/d8/dfe/classcv_1_1VideoCapture.html
+VIDEO CAPTURE OPEN CV http://docs.opencv.org/3.2.0/d8/dfe/classcv_1_1VideoCapture.html
+
+BACKGROUND SUBTRACTURE http://docs.opencv.org/3.2.0/d1/dc5/tutorial_background_subtraction.html
 
 
 
