@@ -20,5 +20,7 @@ BACKGROUND SUBTRACTURE http://docs.opencv.org/3.2.0/d1/dc5/tutorial_background_s
 
 FACE TRACKING TUTORIAL http://synaptitude.me/blog/smooth-face-tracking-using-opencv/
 
+CMAKE TUTORIAL https://www.youtube.com/watch?v=mKNGH58tcYA
+
 
 
