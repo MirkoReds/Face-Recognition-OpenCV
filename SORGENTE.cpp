@@ -1,8 +1,4 @@
 //FACE-EYES DETECTION BUILD v1.0 - Final Version - Written by Freddy Ahumah & Mirko Rossi from ITT Galileo Galilei
-//PC DI SANDRO V
-//PC DI LUIGI V
-//SURFACE DI DAVIDE 
-//PC DI DAVID
 
 #include "C:\opencv\build\include\opencv2\highgui\highgui.hpp"	//LIBRERIE DI OPENCV UTILIZZATE PER L'OBJECT DETECTING E LA GESTIONE DELLE TELECAMERE
 #include "C:\opencv\build\include\opencv2\objdetect.hpp"		//----------------------------------------------
@@ -27,19 +23,20 @@ String ip[2];													//CONTIENE LE STRINGHE DEGLI INDIRIZZI IP DELLE TELECA
 bool  FirstSound = true;
 time_t t1, t2, ts1, ts2;										//T1 e T2 SERVONO PER PARAGONARE IL TEMPO DI DELAY MENTRE TS1 e TS2 SERVONO PER CREARE UN RITARDO TRA I SUONI
 int audio;														//SCELTA DELL'AUDIO 1)BEEP 2)FILE WAV IN DIRECTORY PROGETTO
+int no_face = 0;												//CONTATORE PER DETERMINARE QUANTE VOLTE UNA PERSONA NON GUARDA LO SCHERMO
 																//PROTOTIPI FUNZIONI
-void detectFaces(Mat frame, float delay, int min);				//TROVA LA FACCIA + OCCHI ---> Mat frame = array che contiene i frame video, Delay = ritardo deciso dall'utente
+void detectFaces(Mat frame, int delay, int min);				//TROVA LA FACCIA + OCCHI ---> Mat frame = array che contiene i frame video, Delay = ritardo deciso dall'utente
 int LoadControlCascade();										//CONTROLLO DI CARICAMENTO DELLE CASCADE NECCESSARIE A INDIVIDUARE OCCHI E FACCIA
 string Cams(int contatore);										//UNISCE LE STRINGHE NECESSARIE A CONNETTERSI A TELECAMERE AXIS DELL'AZIENDA ITEL
 int Menu(int);													//STAMPA UN MENU PRINCIPALE DALLA QUALE SCEGLIERE LE OPZIONI
-float Delay(int camera);										//PERMETTE IL RITARDO NEL MOMENTO IN CUI LA TELECAMERAIP/WEBCAM NON VEDE PIU' FACCE
+int Delay(int camera);											//PERMETTE IL RITARDO NEL MOMENTO IN CUI LA TELECAMERAIP/WEBCAM NON VEDE PIU' FACCE
+void FlushIp(int&);
 int main(int argc, char* argv[])
 {
-	int choose = 0, choose_ip = 0;										//VARIABILI DI SCELTA PER TIPO DI TELECAMERA (choose) E PER LE TELECAMERE IP (choose_ip)
+	int choose = 0, choose_ip = 0;								//VARIABILI DI SCELTA PER TIPO DI TELECAMERA (choose) E PER LE TELECAMERE IP (choose_ip)
 	string StreamAdd[2]; 										//ARRAY DI RIFERIMENTO DOVE VIENE RECEPITA LA SOMMA DELLE STRINGHE NECESSARIE PER CONNETTERSI ALLE TELECAMERE IP
 	int contatore = 0;											//CONTA QUANTI INDIRIZZI CI SONO NELL'ARRAY CONTENENTE GLI INDIRIZZI IP (IP[])
-	float delay = 0;												//DETERMINA I SECONDI DI RITARDO DECISI DALL'UTENTE DA QUANDO NON TROVA PIU' UNA FACCIA
-
+	int delay = 0;												//DETERMINA I SECONDI DI RITARDO DECISI DALL'UTENTE DA QUANDO NON TROVA PIU' UNA FACCIA
 	while (1)
 	{
 		system("cls");
@@ -47,8 +44,8 @@ int main(int argc, char* argv[])
 		cout << "OpenCV v." << CV_MAJOR_VERSION << "." << CV_MINOR_VERSION << "." << CV_SUBMINOR_VERSION << endl;
 		choose = 0;
 		choose = Menu(choose);
-
-		FirstSound = true;
+		no_face = 0;
+		//FirstSound = true;
 		//----------------------------------------------------------------------
 		//							TELECAMERA IP
 		//----------------------------------------------------------------------
@@ -58,12 +55,12 @@ int main(int argc, char* argv[])
 			if (contatore == 0)
 			{
 				StreamAdd[contatore] = Cams(contatore);											//ACQUISISCE LA STRINGA PER LA CONNESSIONE ALLA TELECAMERA IP
-				if (StreamAdd[contatore]=="exit")
-					{
-						ip[contatore] = "";
-						exit = true;
-						contatore--;
-					}
+				if (StreamAdd[contatore] == "exit")
+				{
+					ip[contatore] = "";
+					exit = true;
+					contatore--;
+				}
 				contatore++;																	//INDICE NMR INDIRIZZI
 			}
 			else if (contatore == 1)
@@ -73,26 +70,26 @@ int main(int argc, char* argv[])
 				cin >> ans;
 				switch (ans)
 				{
-				case 'y':
-				{
-					StreamAdd[contatore] = Cams(contatore);
-					if (StreamAdd[contatore] == "exit")
+					case 'y':
 					{
-						ip[contatore] = "";
-						exit = true;
-						contatore--;
+						StreamAdd[contatore] = Cams(contatore);
+						if (StreamAdd[contatore] == "exit")
+						{
+							ip[contatore] = "";
+							exit = true;
+							contatore--;
+						}
+						contatore++;
+						break;
 					}
-					contatore++;
-					break;
-				}
-				case 'n':
-					break;
-				default:
-					cout << endl << "Wrong answer. Please try again";
+					case 'n':
+						break;
+					default:
+						cout << endl << "Wrong answer. Please try again";
 				};
 			}
 
-			while (exit==false)
+			while (exit == false)
 			{
 				delay = Delay(choose);
 				cout << endl << "Select the type of audio:\n1: Beep\n2: 'Guardare lo schermo'\nScelta: "; //SELEZIONE TIPO ALLARME SONORO
@@ -110,9 +107,9 @@ int main(int argc, char* argv[])
 					cout << endl << c + 1 << ": " << ip[c];
 				}
 			}
-			while (exit==false)
+			while (exit == false)
 			{
-				cout << endl << "Choice (1 or 2) : ";								//PERMETTE LA SCELTA DELLA IPCAM ALLA QUALE ACCEDERE
+				cout << endl << "Choice (1 or 2) : ";									//PERMETTE LA SCELTA DELLA IPCAM ALLA QUALE ACCEDERE
 				cin >> choose_ip;
 				if (choose_ip>contatore || choose_ip<0)
 					cout << endl << "Error! Please try again." << endl;
@@ -121,7 +118,6 @@ int main(int argc, char* argv[])
 			}
 			if (exit == false)
 			{
-				
 				Mat frame;
 				VideoCapture cap(StreamAdd[choose_ip - 1]);								//PASSA ALLA CLASSE VIDEOCAPTURE LA STRINGA CHE PERMETTE LA CONNESSIONE
 				cap.open(StreamAdd[choose_ip - 1]);										//APRE LA CAMERA IN BACKGROUND SULLA STRINGA FORNITA
@@ -146,6 +142,9 @@ int main(int argc, char* argv[])
 						break;
 					}
 				}
+				cout << "L'utente non ha guardato lo schermo per: " << no_face << " volte dopo il limite di " << delay << " secondi!" << endl;
+				cout << "\nPress a key to continue...";
+				system("pause>nul");
 			}
 		}
 		//----------------------------------------------------------------------
@@ -218,9 +217,14 @@ int main(int argc, char* argv[])
 						break;
 					}
 				}
+				cout << "L'utente non ha guardato lo schermo per: " << no_face << " volte dopo il limite di " << delay << " secondi!" << endl;
+				cout << "\nPress a key to continue...";
+				system("pause>nul");
 			}
 		}
 		if (choose == 3)
+			FlushIp(contatore);
+		if (choose == 4)
 			break;
 		if (choose > 3 || choose < 1)
 		{
@@ -233,7 +237,7 @@ int main(int argc, char* argv[])
 //----------------------------------------------------------------------
 //						FUNZIONI UTILIZZATE
 //----------------------------------------------------------------------
-void detectFaces(Mat frame, float delay, int min)
+void detectFaces(Mat frame, int delay, int min)
 {
 	vector<Rect> faces;
 	Mat frame_gray;
@@ -242,44 +246,16 @@ void detectFaces(Mat frame, float delay, int min)
 	face_cascade.detectMultiScale(frame_gray, faces, 1.1, 3, 0 | CASCADE_SCALE_IMAGE, Size(30, 30));
 	size_t i;
 	bool face = false;
-	//cout << faces.size()<<endl;
+	
+	//cout << faces.size()<<endl
 	for (i = 0; i < faces.size(); i++)
 	{
-		if (audio == 1)//SCELTA AUDIO
-			if (t2 - t1 > delay)
-			{
-				ts2 = time(NULL);
-				if (FirstSound)
-				{
-					ts1 = time(NULL);//prendo il tempo per far aspettare tra un suono e l'altro
-					Beep(523, 500);
-					FirstSound = false;
-				}
-				if (ts2 - ts1>10)
-				{
-					ts1 = time(NULL);
-					Beep(523, 500);
-				}
-			}
-		if (audio == 2)
-			if (t2 - t1 > delay)//Prendo tempo sistema per calcolare in base al ritardo gestito dall'utente
-			{
-				ts2 = time(NULL);
-				if (FirstSound)
-				{
-					ts1 = time(NULL);
-					PlaySound(L"voicewav.wav", NULL, SND_ASYNC);
-					FirstSound = false;
-				}
-				if (ts2 - ts1>10)
-				{
-					ts1 = time(NULL);
-					PlaySound(L"voicewav.wav", NULL, SND_ASYNC);
-				}
-			}
+		t1 = time(NULL); t2 = time(NULL); 
+		FirstSound = true;
+		//FirstSound = true;
 		//PARTE: FACCIA
 		Point center(faces[i].x + faces[i].width / 2, faces[i].y + faces[i].height / 2);
-		ellipse(frame, center, Size(faces[i].width / 2, faces[i].height / 2), 0, 0, 360, Scalar(255, 0, 255), 4, 8, 0);
+		ellipse(frame, center, Size(faces[i].width / 2, faces[i].height / 2), 0, 0, 360, Scalar(0, 0, 255), 4, 8, 0);
 		face = true;
 		//NUOVA PARTE: OCCHI
 		Mat faceROI = frame_gray(faces[i]);
@@ -294,43 +270,44 @@ void detectFaces(Mat frame, float delay, int min)
 		t1 = time(NULL);
 	}
 	t2 = time(NULL);
-	//	cout << t2 <<" - " <<t1 << " = " << t2-t1 << " > " << delay << endl << endl;
 	imshow("MyVideo", frame);
-	if (audio == 1)
-		if (t2 - t1 > delay)
+	if (audio == 1 && t2 - t1 >= delay)
+	{
+		ts2 = time(NULL);
+		if (FirstSound && t2-t1 == delay )
 		{
+			ts1 = time(NULL);
 			ts2 = time(NULL);
-			if (FirstSound)
-			{
-				ts1 = time(NULL);
-				Beep(523, 500);
-				FirstSound = false;
-			}
-			if (ts2 - ts1>10)
-			{
-				ts1 = time(NULL);
-				Beep(523, 500);
-			}
+			Beep(523, 500);
+			no_face++;
+			FirstSound = false;
 		}
-	if (audio == 2)
-		if (t2 - t1 > delay)
+		if (ts2 - ts1 > 10)
 		{
+			ts1 = time(NULL);
 			ts2 = time(NULL);
-			if (FirstSound)
-			{
-				ts1 = time(NULL);
-				PlaySound(L"voicewav.wav", NULL, SND_ASYNC);
-				//waitKey(3000);
-				FirstSound = false;
-			}
-			if (ts2 - ts1>10)
-			{
-				ts1 = time(NULL);
-				PlaySound(L"voicewav.wav", NULL, SND_ASYNC);
-			}
+			Beep(523, 500);
 		}
+	}
+	if (audio == 2 && t2 - t1 >= delay)
+	{
+		ts2 = time(NULL);
+		if (FirstSound && t2 - t1 == delay)
+		{
+			ts1 = time(NULL);
+			ts2 = time(NULL);
+			PlaySound(L"voicewav.wav", NULL, SND_ASYNC);
+			no_face++;
+			FirstSound = false;
+		}
+		if (ts2 - ts1 > 10)
+		{
+			ts1 = time(NULL);
+			ts2 = time(NULL);
+			PlaySound(L"voicewav.wav", NULL, SND_ASYNC);
+		}
+	}
 }
-
 int LoadControlCascade()
 {
 	face_cascade.load("haarcascade_frontalface_alt.xml");
@@ -349,8 +326,6 @@ int LoadControlCascade()
 }
 string Cams(int contatore)
 {
-	//string http = "http://";
-	//string fine = "/video.mjpg";
 	string ipaddress;
 	string userpwd = "http://root:Itel89bz@";
 	string modres = "/axis-cgi/mjpg/video.cgi?.mjpg";
@@ -358,10 +333,9 @@ string Cams(int contatore)
 	cout << endl << "Insert 0 if you want to return to the main menu : \nChoice : ";
 	cin >> ipaddress;
 	ip[contatore] = ipaddress;
-	//return (http + ipaddress + fine);
 	if (ipaddress == "0")
 		return "exit";
-	else 
+	else
 		return (userpwd + ipaddress + modres);
 	//"http://root:Itel89bz@192.168.100.10/axis-cgi/mjpg/video.cgi?resolution=640x480&req_fps=30&.mjpg",
 }
@@ -370,15 +344,34 @@ int Menu(int choose)
 	cout << endl << "Main menu" << endl;
 	cout << "1) Select --AXIS-- IP camera and display it " << endl;
 	cout << "2) Select system webcam and display it " << endl;
-	cout << "3) Exit the software" << endl << endl;
+	cout << "3) Erase saved IPs" << endl;
+	cout << "4) Exit the software" << endl << endl;
 	cout << "Choice: ";
 	cin >> choose;
 	return choose;
 }
-float Delay(int camera)
+int Delay(int camera)
 {
-	cout << endl << "Insert time of delay (in seconds)  of the alarm after no tracking: ";
-	float x;
-	cin >> x;
+	int x;
+	while (1)
+	{
+		cout << endl << "Insert time of delay (integer in seconds) of the alarm after no tracking: ";
+		cin >> x;
+		if (x > 0)
+			break;
+		else
+			cout << "Please insert a integer value greater than 0 !" << endl;
+	}
 	return x;
+}
+void FlushIp(int& contatore)
+{
+	for (int i = 0; i < contatore; i++)
+	{
+		ip[i] = "";
+	}
+	contatore = 0;
+	cout << "IPs have been flushed!\n";
+	cout << "Press a key to continue...";
+	system("pause>nul");
 }
