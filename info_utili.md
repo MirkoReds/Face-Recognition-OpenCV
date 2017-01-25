@@ -1,14 +1,7 @@
-# StageEyeTracking
-Eye tracking, tool utili per il mio stage
-
-IP CAMERA ACCESS
-In the browser of your choice (I'm using Chrome), navigate to the camera's IP address. Provide credentials as necessary.
-You should be looking at a live stream from your camera. Right-click on the video stream and select "Inspect Element" (or its equivalent in non-Chrome browsers).
-You should see a variable called src - this is what you can use within OpenCV to access the camera directly. Mine is /mjpg/video.mjpg, and I bet yours will be similar.
-HAAR CASCADE FILE
-The available Haar-Cascades for face detection are located in the data folder of your OpenCV installation! One of the available Haar-Cascades for face detection is for example /path/to/opencv/data/haarcascades/haarcascade_frontalface_default.xml.
-
-
+# Face-Recognition TOOL using OpenCV 3.2.0
+ITA
+Un tool scritto in c++ mediante librerie OpenCV 3.2.0 che permette di connettersi alle webcam interne e USB del proprio computer oltre alle IP cams nella propria rete locale. E' frutto di un progetto durante uno stage lavorativo in un azienda che si occupa di videosorveglianza e telecomunicazioni.
+Esportare i file all'interno di una cartella e avviare l'esecutivo per utilizzare il programma. 
 
 DOCUMENTAZIONE OPEN CV http://docs.opencv.org/3.2.0/index.html
 
