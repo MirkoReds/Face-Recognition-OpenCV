@@ -16,10 +16,5 @@ VIDEO CAPTURE OPEN CV http://docs.opencv.org/3.2.0/d8/dfe/classcv_1_1VideoCaptur
 
 BACKGROUND SUBTRACTURE http://docs.opencv.org/3.2.0/d1/dc5/tutorial_background_subtraction.html
 
-FACE TRACKING TUTORIAL http://synaptitude.me/blog/smooth-face-tracking-using-opencv/
-
-CMAKE TUTORIAL https://www.youtube.com/watch?v=mKNGH58tcYA
-               http://opencv-users.1802565.n2.nabble.com/compiling-opencv-as-a-single-standalone-binary-td5898976.html
-
 
 
