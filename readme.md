@@ -1,6 +1,8 @@
 # Face-Recognition TOOL using OpenCV 3.2.0
 ITA
-Un tool scritto in c++ mediante librerie OpenCV 3.2.0 che permette di connettersi alle webcam interne e USB del proprio computer oltre alle IP cams nella propria rete locale. E' frutto di un progetto durante uno stage lavorativo in un azienda che si occupa di videosorveglianza e telecomunicazioni.
+Un tool scritto in c++ mediante librerie OpenCV 3.2.0 che permette di connettersi alle webcam interne e USB del proprio computer oltre alle IP cams nella propria rete locale. E' frutto di un progetto durante uno stage lavorativo in un azienda che si occupa di videosorveglianza e telecomunicazioni. Il tool è stato scritto e compilato per sistemi Windows x64. 
+
+
 Esportare i file all'interno di una cartella e avviare l'esecutivo per utilizzare il programma. 
 
 DOCUMENTAZIONE OPEN CV http://docs.opencv.org/3.2.0/index.html
