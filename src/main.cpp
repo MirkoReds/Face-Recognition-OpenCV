@@ -327,7 +327,7 @@ int LoadControlCascade()
 string Cams(int contatore)
 {
 	string ipaddress;
-	string userpwd = "http://root:Itel89bz@";
+	string userpwd = "http://user:password@"; //INSERT USER AND PASS FOR IP CAM CONNECTING
 	string modres = "/axis-cgi/mjpg/video.cgi?.mjpg";
 	cout << endl << "Insert the ip address of the camera that you want to look at [x.x.x.x]";
 	cout << endl << "Insert 0 if you want to return to the main menu : \nChoice : ";
@@ -337,7 +337,6 @@ string Cams(int contatore)
 		return "exit";
 	else
 		return (userpwd + ipaddress + modres);
-	//"http://root:Itel89bz@192.168.100.10/axis-cgi/mjpg/video.cgi?resolution=640x480&req_fps=30&.mjpg",
 }
 int Menu(int choose)
 {
