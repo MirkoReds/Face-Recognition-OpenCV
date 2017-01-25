@@ -370,7 +370,7 @@ void FlushIp(int& contatore)
 		ip[i] = "";
 	}
 	contatore = 0;
-	cout << "IPs have been flushed!\n";
+	cout << "IP addresses have been flushed!\n";
 	cout << "Press a key to continue...";
 	system("pause>nul");
 }
