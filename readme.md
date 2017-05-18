@@ -11,6 +11,7 @@ ENG
 A tool written in c++ using the OpenCV 3.2.0 libraries. The software grants you the possibility to recognize the faces and the eyes of the people showed in the Axis IP Camera video streaming or webcam. All kind of webcams are supported (External USB, In-Built cameras and so on) and only Axis models are supported for the IP Cam functions. The objective is to create a system of surveillance for those who are controlling important monitors finding how many times those are distracting themself from their job leaving a leak (in a security system for example !).
 It's the product of a project that I made with a student of my school in a job stage for a video surveillance company.
 The tool is writtend and compiled for Windows x64 systems and uses the library OPENCV 3.2.0 x64
+
 Download the .zip and extract it or clone the repository, then execute the file named "frec.exe"
 
 
